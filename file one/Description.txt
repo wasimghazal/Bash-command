@@ -1,0 +1,15 @@
+file_stat
+Description: this script will show:
+1. The biggest file is on the home directory.
+2. Total of the files in the home directory.
+3. Total of the directory files in the home directory.
+4. Show how much in the disk space and if it is low or sufficient.
+
+##################################################################
+
+Description: sys_info
+
+1) The user name, user ID, hostname and machine type. 
+2) Total of the number of the files system and show the available space on the disk by #number and percentage.
+3) Show the CPU name and speed. also, display the cache size.
+4) Show the total size of the memory and how much the free size
