@@ -1,0 +1,73 @@
+#! /bin/bash
+
+#########################################
+# 		Description: ProgB 			#
+# 1) Recive some message from ProgA	#
+# 2) create pipe2			#
+# 3) Send his PID number to ProgA	#
+# 4) After killing ProgB by ProgA,    	#
+#    we calling the trap_function.	#
+# 5) When called trap_function we 	#
+#    change the priority to 5.		#
+# 6) remove the pipe2			#
+#########################################
+
+
+echo -e "\e[1m~~~~~~~~~~~~~~~~~~~~"
+echo -e "ProgB starting"
+echo -e "PID of \e[45m$0\e[0m\e[1m is: $$"
+echo -e "~~~~~~~~~~~~~~~~~~~~\e[0m"
+
+########## receive loop start now ##############
+while [ "$input" != "Last message!" ]
+do
+read input < pipe1 #receive messages from ProgA
+echo $input
+sleep 1
+done
+echo -e ""
+############################################
+
+
+########## create pipe2 now ################## 
+if [ ! -p pipe2 ] ; then #create pipe2
+mkfifo pipe2
+fi
+############################################
+
+################# PID send now #########################
+echo "$$" > pipe2 # send the PID of the ProgB by pipe2
+############################################
+
+
+
+
+###################### trap function now ############################
+trap_function() { 
+echo -e "\e[31m###################################################\e[0m"
+echo -e "\e[95mTrap routing initiated!"
+echo -e "Signal caught!!!\n"
+echo -e "\e[97m\e[45m$0\e[0m\e[95m: Increasing my niceness with 5!\e[0m"
+renice -n 5 -p $$   # change the priority
+echo -e "\e[97m\e[45m$0\e[0m\e[95m here, PID $$! I am about to remove pipe2!"
+rm pipe2 # remove pipe2
+echo -e "Trap routine finished!"
+echo -e "\e[97m\e[45m$0\e[0m\e[95m: Exiting now...\e[0m"
+echo -e "\e[31m###################################################\e[0m"
+}
+trap 'trap_function; exit' SIGHUP 
+############################################
+
+
+
+
+########## looping every 1 sec ################## 
+while true; do 	#Infinite loop
+echo -e "\e[97m\e[45m$0\e[0m\e[95m looping every second!\e[0m\n\n"
+sleep 1
+done
+############################################
+
+
+wait 
+exit 0

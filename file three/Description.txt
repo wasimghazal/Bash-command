@@ -1,0 +1,23 @@
+Description: 
+
+ProgA 
+			
+ 1) create pipe1		
+ 2) send message by pipe1 to the ProgB	
+ 3) recived PID number of the ProgB	
+ 4) send trap signal by using the 	
+    SIGHUP with ProgB PID number	
+ 5) remove the pipe1			
+
+##################################################################
+
+ProgB 	
+		
+ 1) Recive some message from ProgA	
+ 2) create pipe2			
+ 3) Send his PID number to ProgA	
+ 4) After killing ProgB by ProgA,    	
+    we calling the trap_function.	
+ 5) When called trap_function we 	
+    change the priority to 5.		
+ 6) remove the pipe2

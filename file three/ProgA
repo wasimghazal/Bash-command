@@ -1,0 +1,60 @@
+#! /bin/bash
+
+#########################################
+# 		Description: ProgA 			#
+# 1) create pipe1			#
+# 2) send message by pipe1 to the ProgB	#
+# 3) recived PID number of the ProgB	#
+# 4) send trap signal by using the 	#
+#    SIGHUP with ProgB PID number	#
+# 5) remove the pipe1			#
+#########################################
+
+
+echo -e "\e[1m~~~~~~~~~~~~~~~~~~~~"
+echo -e "ProgA starting"
+echo -e "PID of \e[43m$0\e[0m\e[1m is: $$"
+echo -e "~~~~~~~~~~~~~~~~~~~~\e[0m"
+
+
+
+########## create pipe1 now ################## 
+if [ ! -p pipe1 ] ; then  # create pipe1 if it does not exist
+mkfifo pipe1
+fi
+############################################
+
+echo -e "\e[43m$0\e[0m: Attempting to send a message through pipe1!"
+########## loop start now ################## 
+echo -e "\e[43m$0\e[0m\e[5m: Please be patient!\e[0m\n"
+for (( x=1; x<7; x++ )) ; do 
+if (( x != 6 )) ; then  
+echo -e "Hello from \e[43m$0\e[0m" > pipe1 # send the message 5 times by pipe1
+elif (( x == 6 )) ; then
+echo "Last message!" > pipe1 # send a message one time by pipe1
+fi
+sleep 1
+done
+##########################################
+
+echo -e "\e[43m$0\e[0m: Waiting to receive a message through pipe2!"
+################# PID receive now #########################
+sleep 1
+read ProgBPID < pipe2  # save the PID of the ProgB in the variable
+echo -e "\e[96m*********************************\e[0m"
+echo -e "\e[32mpipe2 received message:\e[34m \e[107m\e[1m$ProgBPID\e[0m."
+echo -e "\e[96m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\e[0m\n"
+##########################################
+
+sleep 2 # waiting 2 sec until show the loop message on the ProgB two times
+
+######### trap function now ###############
+echo -e "\e[43m$0\e[0m: sending HUP signal to\e[34m \e[107m\e[1m$ProgBPID\e[0m!\n"
+kill -1 $ProgBPID  # kill the ProgB by using SIGHUP
+############################################
+
+echo -e "\e[43m$0\e[0m: Removing pipe1 and exiting now!"
+wait
+rm pipe1 # remove pipe1
+
+exit 0
