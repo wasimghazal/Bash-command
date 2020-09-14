@@ -1,0 +1,47 @@
+
+#! /bin/bash
+##################################################################
+# Description: this script will show:
+# 1) The user name, user ID, hostname and machine type. 
+#2) Total of the number of the files system and show the available space on the disk by #number and percentage.
+#3) Show the CPU name and speed. also, display the cache size.
+#4) Show the total size of the memory and how much the free size
+#################################
+# Author: Wasim Ghazal Aswad	#
+# ID: 17193559			#
+#################################
+
+
+userName=$(set | grep "USER" | head -1 | cut -c 6-20) # show the user Name
+userNameID=$UID # show the user ID
+machineName=$(set | grep -i "mach" | cut -c 12-33) # show the machin Name
+hostName=$(set | grep "HOSTNAME" | cut -c 10-33) # show the hostname
+echo -e "\n\e[1m\e[104mThe first question\e[0m" 
+echo -e "\e[4mThe user name is:\e[0m\t\t\t" $userName
+echo -e "\e[4mThe user ID is:\e[0m\t\t\t\t" $userNameID
+echo -e "\e[4mThe hostname is:\e[0m\t\t\t" $hostName
+echo -e "\e[4mThe machine name is:\e[0m\t\t\t" $machineName
+sysFile=$(df -T -H | awk '{print $1}' | wc -l)
+availSize=$(df -h | grep -w "/" | awk '{print $4}')
+PerSize=$(df -h | grep -w "/" | awk '{print $5}') 
+echo -e "\n\e[1m\e[104mThe second question\e[0m" 
+echo -e "\e[4mThe number of the files system is:\e[0m\t"  $sysFile
+echo -e "\e[4mthe available disk space is:\e[0m\t\t" $availSize
+echo -e "\e[4mThe percentage of used space is:\e[0m\t" $PerSize
+modelName=$(less /proc/cpuinfo | grep "model name" | head -1 | cut -c 13-90) 
+cpuSpeed=$(less /proc/cpuinfo | grep "cpu MHz" | head -1 | awk '{print $4}') 
+speedUnit=$(less /proc/cpuinfo | grep "cpu MHz" | head -1 | awk '{print $2}') 
+cacheSize=$(less /proc/cpuinfo | grep "cache size" | head -1 | awk '{print $4}')
+unitSize=$(less /proc/cpuinfo | grep "cache size" | head -1 | awk '{print $5}')
+echo -e "\n\e[1m\e[104mThe third question\e[0m" 
+echo -e "\e[4mThe CPU model name is:\e[0m\t\t\t" $modelName
+echo -e "\e[4mThe CPU speed is:\e[0m\t\t\t"  $cpuSpeed $speedUnit
+echo -e "\e[4mThe Cache size is:\e[0m\t\t\t" $cacheSize $unitSize
+totalSize=$(less /proc/meminfo | grep "MemTotal" | awk '{print $2}')
+sizeUnite=$(less /proc/meminfo | grep "MemTotal" | awk '{print $3}')
+sizeFree=$(less /proc/meminfo | grep "MemFree" | awk '{print $2}')
+echo -e "\n\e[1m\e[104mThe fourth question\e[0m" 
+echo -e "\e[4mTotal memory size is:\e[0m\t\t\t" $totalSize $sizeUnite
+echo -e "\e[4mThe free memory size is:\e[0m\t\t" $sizeFree $sizeUnite
+echo ""
+exit 0

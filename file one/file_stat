@@ -1,0 +1,30 @@
+#! /bin/bash
+##################################################################
+# Description: this script will show:
+#1. The biggest file is on the home directory.
+#2. Total of the files in the home directory.
+#3. Total of the directory files in the home directory.
+#4. Show how much in the disk space and if it is low or sufficient.
+#################################
+# Author: Wasim Ghazal Aswad	#
+# ID: 17193559			#
+#################################
+big_file=$(ls -l ~ | sort -g -r -k5 |head -1 | awk '{print $9}')
+echo -e "\n\e[43mDisplay te name of the biggest file in the home directory:\e[0m\n"$big_file
+echo "" 
+fileNum=$(find ~ -mindepth 1 -type f | wc -l)
+echo -e "\e[43mDisplaying the number of files in the home dir and sub dir:\e[0m\n"$fileNum
+dirNum=$(find ~ -mindepth 1 -maxdepth 1 -type d | wc -l)
+echo -e "\n\e[43mDisplay number of dirctory files in the home directory:\e[0m\t\n"$dirNum 
+echo -e "\n\e[43mDisplay the number of free 4K-blocks if it is reach to 5 Million:\e[0m\t" 
+free4k=$(df -B 4k | grep -w "/" | awk '{print $2 }') 
+percUsed=$(df -B 4k | grep -w "/" | awk '{print $5 }' | tr -d "%") # give the used size by percentage
+(( percAvai= 100 - $percUsed )) # give the available size of by percentage
+if(( $free4k > 5000000 )); then
+echo -e "\e[5m\e[42m\e[30mDisk space is sufficient, $percAvai% is left.\e[0m\n"
+else 
+echo -e "\e[5m\e[41mDisk  space  is  running  low, $percUsed% is used.\e[0m\n"
+fi
+
+exit 0
+
