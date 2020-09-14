@@ -1,0 +1,57 @@
+#! /bin/bash
+
+#####################################################################
+# Description: this script will show:
+#1. First question: it will run three files (busy_wasit_1, busy_wasit_2 and busy_wasit_3).
+#2. Second question: it will display CPU utilization for the three files and PID number for them.
+#3. Third question: it will killed those files with displaying the message about that.
+#####################################################################
+# Name: Wasim G Aswad
+# ID : 17193559
+
+echo -e "\n\e[1m\e[104mQuestion 1\e[0m"
+echo -e "\e[4mStart three files\e[0m (\e[41mbusy_wait_1, busy_wait_2 and busy_wait_3\e[0m)"
+./busy_wait_1 & # start first file
+./busy_wait_2 & # start second file
+./busy_wait_3 & # start third file
+
+echo -e "\n\e[1m\e[104mQuestion 2\e[0m"
+echo -e "\e[4mDisplay the running files after\e[0m\e[5m 5 sec\e[0m"
+sleep 5
+displayfirst=$(ps aux | sort -grk3 | head -1) # to display first running program
+displaysec=$(ps aux | sort -grk3 | head -2 | tail -1) # to display second running program
+displaythird=$(ps aux | sort -grk3 | head -3 | tail -1) # to display third running program
+echo $displayfirst 
+echo $displaysec
+echo $displaythird
+cpuFile1=$(ps aux | grep -w "busy_wait_1" | awk '{print $3}' | head -1) # display the first CPU
+cpuFile2=$(ps aux | grep -w "busy_wait_2" | awk '{print $3}' | head -1) # display the second CPU
+cpuFile3=$(ps aux | grep -w "busy_wait_3" | awk '{print $3}' | head -1) # display the third CPU
+echo -e "\n\e[1m\e[4mPart(1)\e[0m \e[4mCPU utilization of the files\e[0m"
+echo -e "\e[1mbusy_wait_1 using\e[0m\t \e[41m$cpuFile1\e[0m"
+sleep 2
+echo -e "\e[1mbusy_wait_2 using\e[0m\t \e[41m$cpuFile2\e[0m"
+sleep 2
+echo -e "\e[1mbusy_wait_3 using\e[0m\t \e[41m$cpuFile3\e[0m"
+Num_1_wait=$(ps aux | grep -w "busy_wait_1" | awk '{print $2 }' | head -1) # chooses the PID number for busy_1
+Num_2_wait=$(ps aux | grep -w "busy_wait_2" | awk '{print $2 }' | head -1) # chooses the PID number for busy_2
+Num_3_wait=$(ps aux | grep -w "busy_wait_3" | awk '{print $2 }' | head -1) # chooses the PID number for busy_3
+echo -e "\e[1m\e[4mPart(2)\e[0m \e[4mPID number of the files\e[0m"
+sleep 2
+echo -e "\e[1mbusy_wait_1 using\e[0m\t \e[41m$Num_1_wait\e[0m"
+sleep 2
+echo -e "\e[1mbusy_wait_2 using\e[0m\t \e[41m$Num_2_wait\e[0m"
+sleep 2
+echo -e "\e[1mbusy_wait_3 using\e[0m\t \e[41m$Num_3_wait\e[0m"
+
+echo -e "\n\e[1m\e[104mQuestion 3\e[0m"
+echo -e "\e[4mKilled those files after\e[0m\e[5m 5 sec\e[0m"
+sleep 5
+KillWait_1=$(kill -9 $Num_1_wait) # to kill file "busy_wait_1"
+KillWait_2=$(kill -9 $Num_2_wait) # to kill file "busy_wait_2"
+KillWait_3=$(kill -9 $Num_3_wait) # to kill file "busy_wait_3"
+#echo $KillWait_1 
+#echo $KillWait_2 
+#echo $KillWait_3
+wait
+exit 0

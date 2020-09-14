@@ -1,0 +1,18 @@
+load_wait
+
+Description: 
+
+First: it will run three files (busy_wasit_1, busy_wasit_2 and busy_wasit_3).
+Second: it will display CPU utilization for the three files and PID number for them.
+Third: it will killed those files with displaying the message about that.
+
+##################################################################
+
+singal_trap
+
+1. Will run file busy_wait_1
+2. The program will start an infinite loop
+3. Then, we need to use the SIGINT to broke the infinite loop
+4. When we use SIGINT it will called the trap_function, which it
+   will kill the file busy_wait_1 who we ran it on the first stage
+   and display message about that.

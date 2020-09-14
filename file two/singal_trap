@@ -1,0 +1,45 @@
+#! /bin/bash
+#####################################################################
+# Description: this script will show:
+#1. Will run file busy_wait_1
+#2. The program will start an infinite loop
+#3. Then, we need to use the SIGINT to broke the infinite loop
+#4. When we use SIGINT it will called the trap_function, which it
+#   will kill the file busy_wait_1 who we ran it on the first stage
+#   and display message about that.
+#####################################################################
+# Name: Wasim G Aswad
+# ID : 17193559
+
+
+./busy_wait_1 &
+
+# get the PID number of the program
+numberPID=$(ps aux | grep -w "busy_wait_1" | awk '{print $2 }' | head -1) 
+
+trap_function() { # trap function start here
+
+kill -TERM "$numberPID" # kill the program busy_wait_1
+
+#message will appear after the program killed tell us about the name and PID number of the program 
+echo -e "\nYou have just \e[47m\e[31mterminated\e[0m \e[1mbusy_wait_1\e[0m Who owned the PID \e[1m \e[91m\e[107m$numberPID\e[0m " 
+
+wait
+# wait for child to exit properly
+exit
+
+} # trap function end here
+
+trap 'trap_function; exit' SIGINT # when press CTRL+C the program will move to trap_function
+echo -e "The program \e[1mbusy_wait_1\e[0m working now"
+echo -e "Please use \e[5mCTRL+C\e[0m to \e[47m\e[31mterminating\e[0m the program \n \t\tthanks\n"
+
+
+while true; do # loop will sleep 1 sec every time
+
+sleep 1
+done
+
+wait
+
+exit 0

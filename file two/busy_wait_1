@@ -1,0 +1,8 @@
+#! /bin/bash
+
+# busy_wait_1
+while true; do
+(( x++ ))
+done
+
+exit
